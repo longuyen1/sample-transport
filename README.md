@@ -5,6 +5,7 @@ PURPOSE
 This document describes how to build, deploy and test the sample socket transport.
 Sample socket transport demonstrates how a transport can be developed by using
 the Transport SDK and leverage the features provided.
+More: http://docs.oracle.com/cd/E28280_01/dev.1111/e15866/developing.htm#OSBDV1292
 
 ==========
 CONTENTS:
