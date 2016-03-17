@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE message_catalog PUBLIC "weblogic-message-catalog-dtd"
+  "http://www.bea.com/servers/wls810/dtd/msgcat.dtd">
+
+
+<message_catalog
+  i18n_package="com.bea.alsb.transports.socket"
+  l10n_package="com.bea.alsb.transports.socket"
+  subsystem="Sample Socket Transport"
+  version="1.0"
+  loggables="true"
+  >
+
+  <message messageid="BACKLOG">
+    <messagebody>
+      Backlog
+    </messagebody>
+  </message>
+
+  <message messageid="BACKLOG_INFO">
+    <messagebody>
+      Maximum queue size of the pending requests on the server socket.
+    </messagebody>
+  </message>
+
+  <message messageid="TIME_OUT">
+    <messagebody>
+      Connection Timeout
+    </messagebody>
+  </message>
+
+
+  <message messageid="TIME_OUT_INFO">
+    <messagebody>
+      "Socket connection timeout(in milli seconds)".
+    </messagebody>
+  </message>
+
+<message messageid="SOCKET_TYPE">
+    <messagebody>
+      Socket Type
+    </messagebody>
+  </message>
+
+<message messageid="SOCKET_TYPE_INFO">
+    <messagebody>
+      "Special socket type e.g. ATM, T24, or other"
+    </messagebody>
+  </message>
+
+<message messageid="INIT_BYTE">
+    <messagebody>
+      Initial Byte
+    </messagebody>
+  </message>
+
+<message messageid="INIT_BYTE_INFO">
+    <messagebody>
+      "Initial byte size to read"
+    </messagebody>
+  </message>
+
+<message messageid="KEEP_INIT_BYTE">
+    <messagebody>
+      Keep Initial Byte
+    </messagebody>
+  </message>
+
+<message messageid="KEEP_INIT_BYTE_INFO">
+    <messagebody>
+      "Keep initial byte in the message"
+    </messagebody>
+  </message>
+
+  <message messageid="MESSAGE_LENGTH">
+    <messagebody>
+      Message Length
+    </messagebody>
+  </message>
+
+  <message messageid="MESSAGE_LENGTH_INFO">
+    <messagebody>
+      "Message Length for fixed length message"
+    </messagebody>
+  </message>
+
+  <message messageid="DELIMITER">
+    <messagebody>
+      Delimiter
+    </messagebody>
+  </message>
+
+
+  <message messageid="DELIMITER_INFO">
+    <messagebody>
+      "Delimiter for delimited message"
+    </messagebody>
+  </message>
+
+
+  <message messageid="WELCOME_MESSAGE">
+    <messagebody>
+      Welcome Message
+    </messagebody>
+  </message>
+
+
+  <message messageid="WELCOME_MESSAGE_INFO">
+    <messagebody>
+      "Welcome Message"
+    </messagebody>
+  </message>
+
+    <message messageid="WELCOME_MESSAGE_COUNT">
+    <messagebody>
+      Welcome Message Count
+    </messagebody>
+  </message>
+
+
+  <message messageid="WELCOME_MESSAGE_COUNT_INFO">
+    <messagebody>
+      "Welcome Message Count Info"
+    </messagebody>
+  </message>
+
+  <message messageid="KEEP_CONNECTION">
+    <messagebody>
+		Keep Connection
+    </messagebody>
+  </message>
+
+<message messageid="KEEP_CONNECTION_INFO">
+    <messagebody>
+      "Keep Socket Connection"
+    </messagebody>
+  </message>
+
+  <message messageid="REQUEST_RESPONSE">
+    <messagebody>
+      Is Response Required
+    </messagebody>
+  </message>
+
+  <message messageid="REQUEST_RESPONSE_INFO">
+    <messagebody>
+      Whether a response is required from the other endpoint.
+    </messagebody>
+  </message>
+
+  <message messageid="REQUEST_ENCODING">
+    <messagebody>
+      Request Encoding
+    </messagebody>
+  </message>
+
+  <message messageid="REQUEST_ENCODING_INFO">
+    <messagebody>
+      Request Encoding
+    </messagebody>
+  </message>
+
+  <message messageid="RESPONSE_ENCODING">
+    <messagebody>
+      Response Encoding
+    </messagebody>
+  </message>
+
+  <message messageid="RESPONSE_ENCODING_INFO">
+    <messagebody>
+      Response encoding
+    </messagebody>
+  </message>
+
+  <message messageid="DISPATCH_POLICY">
+    <messagebody>
+      Dispatch policy
+    </messagebody>
+  </message>
+
+  <message messageid="DISPATCH_POLICY_INFO">
+    <messagebody>
+      Dispatch policy to be applied for this service.
+    </messagebody>
+  </message>
+
+  <message messageid="ENABLE_NAGLE_ALGORITHM">
+    <messagebody>
+      Enable Nagle's Algorithm
+    </messagebody>
+  </message>
+
+  <message messageid="ENABLE_NAGLE_ALGORITHM_INFO">
+    <messagebody>
+      Enable Nagle's Algorithm (TCP_NODELAY)
+    </messagebody>
+  </message>
+
+  <message messageid="INBOUND_URI_FORMAT">
+    <messagebody>
+      tcp://port
+    </messagebody>
+  </message>
+
+
+  <message messageid="INBOUND_URI_FORMAT_AUTOFILL">
+    <messagebody>
+      tcp://9999
+    </messagebody>
+  </message>
+
+
+  <message messageid="OUTBOUND_URI_FORMAT">
+    <messagebody>
+      tcp://socket-ip-address:port
+    </messagebody>
+  </message>
+
+
+  <message messageid="OUTBOUND_URI_FORMAT_AUTOFILL">
+    <messagebody>
+      tcp://localhost:8888
+    </messagebody>
+  </message>
+
+
+</message_catalog>

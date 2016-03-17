@@ -1,0 +1,346 @@
+<project name="sock-transport" default="build" basedir=".">
+
+    <!-- set global properties for this build -->
+    <property environment="env"/>
+
+    <taskdef name="wldeploy"
+             classname="weblogic.ant.taskdefs.management.WLDeploy"/>
+
+    <!-- removing spaces in the properties file -->
+    <loadproperties srcfile="${basedir}/build.properties">
+        <filterchain>
+            <tokenfilter>
+                <trim/>
+            </tokenfilter>
+        </filterchain>
+    </loadproperties>
+
+
+    <!--    names defining the socket transport     -->
+    <property name="sock.transport.name"            value="Socket Transport"/>
+    <property name="sock.transport.jar"             value="sock_transport.jar"/>
+    <property name="sock.transport.ear"             value="sock_transport.ear"/>
+    <property name="sock.transport.eclipse.name"    value="com.bea.alsb.transports.socket"/>
+    <property name="sock.transport.eclipse.version" value="1.1.0"/>
+
+
+    <!--    source directories      -->
+    <property name="sock.transports.dir"            value="."/>
+    <property name="sock.transports.src.dir"        value="${sock.transports.dir}/src"/>
+    <property name="sock.transports.l10n.dir"       value="${sock.transports.dir}/l10n"/>
+    <property name="sock.transports.schemas.dir"    value="${sock.transports.dir}/schemas"/>
+    <property name="sock.transports.resources.dir"  value="${sock.transports.dir}/resources"/>
+    <property name="sock.transports.eclipse.dir"    value="${sock.transports.dir}/eclipse"/>
+    <property name="sock.transports.offline.dir"    value="${sock.transports.dir}/offline"/>
+
+    <!--    build directories, files and archive variables  -->
+    <property name="build.dir.transports.sock"
+              value="${sock.transports.dir}/build"/>
+    <property name="build.dir.transports.generated.src"
+              value="${build.dir.transports.sock}/generatedsrc"/>
+    <property name="build.dir.transports.sock.classes"
+              value="${build.dir.transports.sock}/classes"/>
+    <property name="build.dir.transports.sock.ear"
+              value="${build.dir.transports.sock}/ear"/>
+
+    <property name="build.sock.transport.jar"
+              value="${build.dir.transports.sock}/${sock.transport.jar}"/>
+    <property name="build.sock.transport.ear"
+              value="${build.dir.transports.sock}/${sock.transport.ear}"/>
+
+    <!--    installation directories / files    -->
+    <property name="osb.lib.dir"                location="${osb.install.dir}/lib"/>
+    <property name="osb.lib.transports.dir"     location="${osb.lib.dir}/transports"/>
+    <property name="osb.eclipse.plugin.dir"     location="${osb.install.dir}/eclipse/plugins"/>
+    <property name="osb.offline.plugin.dir"     location="${osb.install.dir}/config/plugins"/>
+
+    
+    <!--    classpath libraries     -->
+    <property name="weblogic.jar"
+              location="${wl.home}/server/lib/weblogic.jar"/>
+    <property name="apache-xbean.jar"
+              location="${mw.home}/modules/com.bea.core.xml.xmlbeans_${version.com.bea.core.xml.xmlbeans}.jar"/>
+
+    <property name="sb-kernel-api.jar"
+              value="${osb.lib.dir}/sb-kernel-api.jar"/>
+    <property name="configfwk.jar"
+              value="${osb.install.dir}/modules/com.bea.common.configfwk_${version.com.bea.common.configfwk}.jar"/>
+
+    
+    <!-- Test client variables -->
+    <property name="sock.test-client.dir"
+              value="${sock.transports.dir}/test"/>
+    <property name="sock.test-client.build"
+              value="${sock.test-client.dir}/build"/>
+    <property name="sock.test-client.classes"
+              value="${sock.test-client.build}/classes"/>
+    <property name="sock.test-client.src"
+              value="${sock.test-client.dir}/src"/>
+    <property name="sock.test-client.jar"
+              value="${sock.test-client.build}/test-client.jar"/>
+
+
+    <!-- ==================================================================== -->
+    <!--        clean : clean the build directories                          -->
+    <!-- ==================================================================== -->
+
+    <target name="clean" description="Clean the build">
+        <echo message="--------------------------------------------------"/>
+        <echo message="|         Socket transport clean started         |"/>
+        <echo message="--------------------------------------------------"/>
+
+        <delete dir="${build.dir.transports.sock}" failonerror="true"/>
+
+        <delete file="${osb.lib.transports.dir}/${sock.transport.jar}"/>
+        <delete file="${osb.lib.transports.dir}/${sock.transport.ear}"/>
+        <delete file="${osb.eclipse.plugin.dir}/${sock.transport.eclipse.name}_${sock.transport.eclipse.version}"/>
+        <delete file="${osb.offline.plugin.dir}/transport-socket.xml"/>
+
+        <echo message="--------------------------------------------------"/>
+        <echo message="|          Socket transport clean completed      |"/>
+        <echo message="--------------------------------------------------"/>
+    </target>
+
+    
+    <!-- ==================================================================== -->
+    <!--        build : build sources and create archives                     -->
+    <!-- ==================================================================== -->
+
+    <!--    root build target   -->
+    <target name="build" description="Builds the Socket XBus transport.">
+        <echo message="--------------------------------------------------"/>
+        <echo message="|            Socket transport build started     |"/>
+        <echo message="--------------------------------------------------"/>
+
+        <antcall target="create_directories"/>
+
+        <antcall target="compile"/>
+
+        <antcall target="create_jar"/>
+        <antcall target="create_ear"/>
+        <antcall target="create_test_client_jar"/>
+
+        <echo message="--------------------------------------------------"/>
+        <echo message="|           Socket transport build completed     |"/>
+        <echo message="--------------------------------------------------"/>
+    </target>
+
+
+    <!--    create the build directory structure    -->
+    <target name="create_directories">
+        <echo message=">>>>>> create_directories >>>>>>"/>
+
+        <mkdir dir="${build.dir.transports.sock}"/>
+        <mkdir dir="${build.dir.transports.sock.classes}"/>
+        <mkdir dir="${build.dir.transports.sock.ear}"/>
+
+        <echo message=">>>>>> Done create_directories >>>>>>"/>
+    </target>
+
+    
+    <!--    main compilation target -->
+    <target name="compile">
+        <echo message=">>>>>> compiling sources started >>>>>>"/>
+        <echo message="debug = ${debug}, optimize = ${optimize}, deprecation = ${deprecation}"/>
+
+        <antcall target="compile.i18n.catalogs"/>
+        <antcall target="compile.schemas"/>
+        <antcall target="compile.resources"/>
+
+        <javac deprecation="${deprecation}" debug="${debug}" optimize="${optimize}"
+               source="1.5" fork="true"
+               srcdir="${sock.transports.src.dir}"
+               destdir="${build.dir.transports.sock.classes}">
+            <classpath>
+                <pathelement path="${apache-xbean.jar}"/>
+                <pathelement path="${configfwk.jar}"/>
+                <pathelement path="${sb-kernel-api.jar}"/>
+            </classpath>
+       </javac>
+
+        <echo message=">>>>>> compiling sources completed >>>>>>"/>
+    </target>
+
+
+    <!--    l10n compilation    -->
+    <target name="compile.i18n.catalogs">
+        <echo message=">>>>>> compiling i18n catalogs started >>>>>>"/>
+
+        <property name="params.msgcat.dir"          value="${sock.transports.l10n.dir}"/>
+        <property name="params.build.dir"           value="${build.dir.transports.sock.classes}"/>
+        <property name="params.generatedsrc.dir"    value="${build.dir.transports.generated.src}/catalogs"/>
+        <property name="params.module.name"         value="SocketTransport"/>
+
+        <java classname="weblogic.i18ngen" fork="true" failonerror="true">
+            <arg value="-l10n"/>
+            <arg value="-i18n"/>
+            <arg value="-compile"/>
+            <!-- arg value="-server"/-->
+            <arg value="-verbose"/>
+            <arg value="-keepgenerated"/>
+            <arg value="-d"/>
+            <arg value="${params.generatedsrc.dir}"/>
+            <arg value="${params.msgcat.dir}"/>
+            <classpath>
+                <pathelement location="${weblogic.jar}"/>
+                <pathelement location="${env.JAVA_HOME}/lib/tools.jar"/>
+            </classpath>
+        </java>
+        <copy todir="${params.build.dir}">
+            <fileset dir="${params.generatedsrc.dir}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <antcall target="fixup.i18n"/>
+
+        <echo message=">>>>>> compiling i18n catalogs completed >>>>>>"/>
+    </target>
+
+    <target name="fixup.i18n" if="params.noi18n">
+        <delete dir="${params.build.dir}/weblogic"/>
+    </target>
+
+
+    <!--    schema compilatiuon -->
+    <target name="compile.schemas">
+        <echo message=">>>>>> compiling schemas started >>>>>>"/>
+
+        <property name="params.schemas.dir"         value="${sock.transports.schemas.dir}"/>
+        <property name="params.build.dir"           value="${build.dir.transports.sock.classes}"/>
+        <property name="params.generatedsrc.dir"    value="${build.dir.transports.generated.src}/xbean"/>
+        <property name="extra-params"               value=""/>
+
+        <java classname="org.apache.xmlbeans.impl.tool.SchemaCompiler"
+              fork="true"
+              failonerror="yes">
+            <classpath>
+                <pathelement location="${apache-xbean.jar}"/>
+                <pathelement location="${sb-kernel-api.jar}"/>
+            </classpath>
+            <arg line="-d ${params.build.dir}
+                       ${params.schemas.dir}
+                       -src ${params.generatedsrc.dir}
+                       ${extra-params}"/>
+        </java>
+
+        <echo message=">>>>>> compiling schemas completed >>>>>>"/>
+    </target>
+
+
+    <!--    java resources   -->
+    <target name="compile.resources">
+        <copy todir="${build.dir.transports.sock.classes}">
+            <fileset dir="${sock.transports.resources.dir}">
+                <include name="**/*"/>
+            </fileset>
+        </copy>
+    </target>
+
+
+    <!--    create a jar containing all the compiled classes of the socket transport. -->
+    <target name="create_jar">
+        <jar jarfile="${build.sock.transport.jar}">
+            <fileset dir="${build.dir.transports.sock.classes}">
+                <include name="**/**"/>
+            </fileset>
+        </jar>
+    </target>
+
+
+    <!--    create the transport ear -->
+    <target name="create_ear">
+
+        <!-- create help webapp -->
+        <copy todir="${build.dir.transports.sock.ear}" overwrite="true">
+            <fileset dir="${sock.transports.dir}">
+                <include name="webapp/**"/>
+            </fileset>
+        </copy>
+
+        <!-- prepare app -->
+        <mkdir dir="${build.dir.transports.sock.ear}/APP-INF/lib"/>
+        <copy todir="${build.dir.transports.sock.ear}/APP-INF/lib"
+              file="${build.sock.transport.jar}"
+              overwrite="true"/>
+
+        <!-- create ear -->
+        <ear destfile="${build.sock.transport.ear}"
+             appxml="${sock.transports.dir}/META-INF/application.xml">
+            <fileset dir="${build.dir.transports.sock.ear}"/>
+            <metainf dir="${sock.transports.dir}/META-INF">
+                <include name="**/weblogic-application.xml"/>
+                <include name="**/*.mf"/>
+            </metainf>
+        </ear>
+    </target>
+
+
+    <!-- Compiles the test client sources and builds a jar. -->
+    <target name="create_test_client_jar">
+
+        <mkdir dir="${sock.test-client.classes}"/>
+
+        <javac srcdir="${sock.test-client.src}"
+               destdir="${sock.test-client.classes}"
+               debug="${debug}" optimize="$optimize" source="1.5"/>
+
+        <jar jarfile="${sock.test-client.jar}">
+            <fileset dir="${sock.test-client.classes}">
+                <include name="**/**"/>
+            </fileset>
+        </jar>
+
+    </target>
+
+
+    <!-- ==================================================================== -->
+    <!--        stage : stage archives to install directories                 -->
+    <!-- ==================================================================== -->
+
+    <target name="stage">
+
+        <!-- stage the transport jar library -->
+        <copy file="${build.sock.transport.jar}"
+              todir="${osb.lib.transports.dir}"/>
+
+        <!-- stage the transport ear -->
+        <copy file="${build.sock.transport.ear}"
+              todir="${osb.lib.transports.dir}"/>
+
+        <!-- stage the eclipse plugin -->
+        <copy todir="${osb.eclipse.plugin.dir}/${sock.transport.eclipse.name}_${sock.transport.eclipse.version}">
+            <fileset dir="${sock.transports.eclipse.dir}">
+                <include name="**/*"/>
+            </fileset>
+        </copy>
+
+        <!-- stage the OSB offline-mode plugin -->
+        <copy file="${sock.transports.offline.dir}/transport-socket.xml"
+              todir="${osb.offline.plugin.dir}"/>
+
+    </target>
+
+
+    <!-- ==================================================================== -->
+    <!--        deploy : dynamic deployment of the socket transport on WLS    -->
+    <!-- ==================================================================== -->
+
+    <!-- Deploys the sock_transport.ear on the configured server. -->
+    <target name="deploy">
+        <echo message="-------------------------------------------------------------"/>
+        <echo message="|     Deploying Socket Transport on ${wls.server.name} |"/>
+        <echo message="-------------------------------------------------------------"/>
+
+        <wldeploy action="deploy"
+                  name="${sock.transport.name}" source="${osb.lib.transports.dir}/${sock.transport.ear}"
+                  user="${wls.username}" password="${wls.password}"
+                  adminurl="t3://${wls.hostname}:${wls.port}"
+                  targets="${wls.server.name}"
+                  verbose="true"/>
+
+        <echo message="-------------------------------------------------------------"/>
+        <echo message="|      Deployment completed                                 |"/>
+        <echo message="-------------------------------------------------------------"/>
+    </target>
+
+</project>

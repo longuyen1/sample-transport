@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.bea.com/alsb/transports/sock"
+           targetNamespace="http://www.bea.com/alsb/transports/sock"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:ts="http://www.bea.com/wli/sb/transports"
+           xmlns:refs="http://www.bea.com/wli/sb/reference"
+
+           elementFormDefault="qualified">
+  <xs:import namespace="http://www.bea.com/wli/sb/transports"
+             schemaLocation="TransportCommon.xsd"/>
+
+  <xs:complexType name="SocketEndpointConfiguration">
+    <xs:annotation>
+      <xs:documentation>
+        SocketTransport - specific configuration
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="outbound-properties"
+                    type="SocketOutboundPropertiesType"/>
+        <xs:element name="inbound-properties"
+                    type="SocketInboundPropertiesType"/>
+      </xs:choice>
+      <xs:element name="request-response" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>
+            Whether the message pattern is synchronous
+            request-response or one-way.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="dispatch-policy" type="xs:string" minOccurs="0"
+                  default="">
+        <xs:annotation>
+          <xs:documentation>
+            WLS dispatch policy (name of the WLS work manager or Execute Queue
+            to use for this endpoint). If not specified, the default WLS work
+            manager will be used
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="request-encoding" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            character set encoding on the request
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="response-encoding" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            character set encoding on the response
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SocketOutboundPropertiesType">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <!-- socket connection timeout -->
+      <xs:element name="timeout" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            socket connection timeout.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+<xs:element name="sockettype" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Socket Type
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+       <xs:element name="initbyte" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            byte size for initial read
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+	 <xs:element name="keepinitbyte" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>
+            keep initial byte.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+ <xs:element name="messagelength" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            message length
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+       <xs:element name="delimiter" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Delimiter
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+       <xs:element name="welcomemessage" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            keep initial byte.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+        <xs:element name="welcomemessagecount" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            welcome message count
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+
+       <xs:element name="keepconnection" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>
+            keep socket connection
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <!-- disable/enable TCP_NODELAY -->
+      <xs:element name="enable-nagle-algorithm" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>
+            disable/enable TCP_NODELAY.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SocketInboundPropertiesType">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="backlog" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            queue length for the server socket.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="timeout" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            socket connection timeout.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+<xs:element name="sockettype" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Socket Type
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="initbyte" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            byte size for initial read
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+	 <xs:element name="keepinitbyte" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>
+            keep initial byte.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+       <xs:element name="messagelength" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            message length
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+       <xs:element name="delimiter" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Delimiter
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+       <xs:element name="welcomemessage" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            keep initial byte.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+        <xs:element name="welcomemessagecount" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            welcome message count
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+
+       <xs:element name="keepconnection" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>
+            keep socket connection
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="enable-nagle-algorithm" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>
+            disable/enable TCP_NODELAY.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!--
+            Socket Request Metadata
+     -->
+  <xs:complexType name="SocketRequestMetaDataXML">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="ts:RequestMetaDataXML">
+        <xs:sequence>
+          <xs:element name="client-host"
+                      type="xs:string" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>
+                Client host name
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="client-port" type="xs:int" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Client port</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SocketRequestHeadersXML">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="ts:RequestHeadersXML">
+        <xs:sequence>
+          <xs:element name="message-count" type="xs:long" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>
+                Number of messages passed till now.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!--
+             Socket Response Metadata
+     -->
+  <xs:complexType name="SocketResponseMetaDataXML">
+    <xs:complexContent>
+      <xs:extension base="ts:ResponseMetaDataXML">
+        <xs:sequence>
+          <xs:element name="service-endpoint-host"
+                      type="xs:string" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>
+                Host name of the service end point connection.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="service-endpoint-ip"
+                      type="xs:string" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>
+                IP address of the service end point connection.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SocketResponseHeadersXML">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="ts:ResponseHeadersXML"/>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>
